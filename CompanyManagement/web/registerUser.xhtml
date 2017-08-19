@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Company Management</title>
+    </h:head>
+    <h:body>
+
+        <p style="font-size: 30px;">Register User</p>
+
+        <h:form>
+            <h:panelGrid columns="2">
+                Username:
+                <h:inputText value="#{controller.newUser.username}"/>
+                Password:
+                <h:inputSecret value="#{controller.newUser.password}"/>
+                Name:
+                <h:inputText value="#{controller.newUser.name}"/>
+                Surname:
+                <h:inputText value="#{controller.newUser.surname}"/>
+                Address:
+                <h:inputText value="#{controller.newUser.address}"/>
+                Date of birth:
+                <h:inputText value="#{controller.newUser.dateOfBirth}">
+                    <f:convertDateTime pattern="yyyy-MM-dd"/>         
+                </h:inputText>  
+                E-mail:
+                <h:inputText value="#{controller.newUser.email}"/>
+                <h:commandButton value="REGISTER" action="#{controller.registerUser()}"/>
+            </h:panelGrid>
+            
+            <h:panelGrid>
+                <h:commandLink value="Back" action="index"/>
+            </h:panelGrid>
+            #{controller.msg}
+        </h:form>
+
+    </h:body>
+</html>
+
