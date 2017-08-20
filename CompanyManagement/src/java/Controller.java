@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import db.*;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
 
 @SessionScoped
 @ManagedBean
@@ -13,50 +15,40 @@ public class Controller implements Serializable {
 
     private String username;
     private String password;
-    
-    public String msg = "";
+    private String newPassword;
+
+    public String msg;
 
     private User user = new User();
-    private User newUser = new User();
     private ArrayList<User> users = new ArrayList<User>();
     private City city = new City();
-    private City newCity = new City();
     private ArrayList<City> cities = new ArrayList<City>();
     private Company company = new Company();
-    private Company newCompany = new Company();
     private ArrayList<Company> companies = new ArrayList<Company>();
     private Position position = new Position();
-    private Position newPosition = new Position();
     private ArrayList<Position> positions = new ArrayList<Position>();
     private Team team = new Team();
-    private Team newTeam = new Team();
     private ArrayList<Team> teams = new ArrayList<Team>();
     private CompanyCity companyCity = new CompanyCity();
-    private CompanyCity newCompanyCity = new CompanyCity();
     private ArrayList<CompanyCity> companyCities = new ArrayList<CompanyCity>();
     private CompanyTeam companyTeam = new CompanyTeam();
-    private CompanyTeam newCompanyTeam = new CompanyTeam();
     private ArrayList<CompanyTeam> companyTeams = new ArrayList<CompanyTeam>();
     private UserCompany userCompany = new UserCompany();
-    private UserCompany newUserCompany = new UserCompany();
     private ArrayList<UserCompany> userCompanies = new ArrayList<UserCompany>();
     private UserPosition userPosition = new UserPosition();
-    private UserPosition newUserPosition = new UserPosition();
     private ArrayList<UserPosition> userPositions = new ArrayList<UserPosition>();
     private UserSalary userSalary = new UserSalary();
-    private UserSalary newUserSalary = new UserSalary();
     private ArrayList<UserSalary> userSalaries = new ArrayList<UserSalary>();
     private UserTeam userTeam = new UserTeam();
-    private UserTeam newUserTeam = new UserTeam();
     private ArrayList<UserTeam> userTeams = new ArrayList<UserTeam>();
     private OpenPosition openPosition = new OpenPosition();
-    private OpenPosition newOpenPosition = new OpenPosition();
     private ArrayList<OpenPosition> openPositions = new ArrayList<OpenPosition>();
     private CompanyOpenPosition companyOpenPosition = new CompanyOpenPosition();
-    private CompanyOpenPosition newCompanyOpenPosition = new CompanyOpenPosition();
     private ArrayList<CompanyOpenPosition> companyOpenPositions = new ArrayList<CompanyOpenPosition>();
-    
+
+//******************************************************************************
     public Controller() {
+        msg = "";
         initUsers();
         initCities();
         initCompanies();
@@ -74,14 +66,12 @@ public class Controller implements Serializable {
 
     private void initUsers() {
         Connection con = null;
-        Statement stmt = null;
-        ResultSet rs = null;
 
         try {
             con = DB.getInstance().getConnection();
-            stmt = con.createStatement();
+            Statement stmt = con.createStatement();
             String querry = "SELECT * FROM user;";
-            rs = stmt.executeQuery(querry);
+            ResultSet rs = stmt.executeQuery(querry);
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String username = rs.getString("username");
@@ -107,14 +97,12 @@ public class Controller implements Serializable {
 
     private void initCities() {
         Connection con = null;
-        Statement stmt = null;
-        ResultSet rs = null;
 
         try {
             con = DB.getInstance().getConnection();
-            stmt = con.createStatement();
+            Statement stmt = con.createStatement();
             String querry = "SELECT * FROM city;";
-            rs = stmt.executeQuery(querry);
+            ResultSet rs = stmt.executeQuery(querry);
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String name = rs.getString("name");
@@ -124,6 +112,7 @@ public class Controller implements Serializable {
                 cities.add(city);
             }
             city = new City();
+            con.close();
         } catch (SQLException ex) {
         } finally {
             DB.getInstance().putConnection(con);
@@ -132,14 +121,12 @@ public class Controller implements Serializable {
 
     private void initCompanies() {
         Connection con = null;
-        Statement stmt = null;
-        ResultSet rs = null;
 
         try {
             con = DB.getInstance().getConnection();
-            stmt = con.createStatement();
+            Statement stmt = con.createStatement();
             String querry = "SELECT * FROM company;";
-            rs = stmt.executeQuery(querry);
+            ResultSet rs = stmt.executeQuery(querry);
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String name = rs.getString("name");
@@ -149,6 +136,7 @@ public class Controller implements Serializable {
                 companies.add(company);
             }
             company = new Company();
+            con.close();
         } catch (SQLException ex) {
         } finally {
             DB.getInstance().putConnection(con);
@@ -157,14 +145,12 @@ public class Controller implements Serializable {
 
     private void initPositions() {
         Connection con = null;
-        Statement stmt = null;
-        ResultSet rs = null;
 
         try {
             con = DB.getInstance().getConnection();
-            stmt = con.createStatement();
+            Statement stmt = con.createStatement();
             String querry = "SELECT * FROM position;";
-            rs = stmt.executeQuery(querry);
+            ResultSet rs = stmt.executeQuery(querry);
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String name = rs.getString("name");
@@ -174,6 +160,7 @@ public class Controller implements Serializable {
                 positions.add(position);
             }
             position = new Position();
+            con.close();
         } catch (SQLException ex) {
         } finally {
             DB.getInstance().putConnection(con);
@@ -182,14 +169,12 @@ public class Controller implements Serializable {
 
     private void initTeams() {
         Connection con = null;
-        Statement stmt = null;
-        ResultSet rs = null;
 
         try {
             con = DB.getInstance().getConnection();
-            stmt = con.createStatement();
+            Statement stmt = con.createStatement();
             String querry = "SELECT * FROM team;";
-            rs = stmt.executeQuery(querry);
+            ResultSet rs = stmt.executeQuery(querry);
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String name = rs.getString("name");
@@ -199,6 +184,7 @@ public class Controller implements Serializable {
                 teams.add(team);
             }
             team = new Team();
+            con.close();
         } catch (SQLException ex) {
         } finally {
             DB.getInstance().putConnection(con);
@@ -207,14 +193,12 @@ public class Controller implements Serializable {
 
     private void initCompanyCities() {
         Connection con = null;
-        Statement stmt = null;
-        ResultSet rs = null;
 
         try {
             con = DB.getInstance().getConnection();
-            stmt = con.createStatement();
+            Statement stmt = con.createStatement();
             String querry = "SELECT * FROM companycity;";
-            rs = stmt.executeQuery(querry);
+            ResultSet rs = stmt.executeQuery(querry);
             while (rs.next()) {
                 int id = rs.getInt("id");
                 int idCompany = rs.getInt("idCompany");
@@ -225,6 +209,7 @@ public class Controller implements Serializable {
                 companyCities.add(companyCity);
             }
             companyCity = new CompanyCity();
+            con.close();
         } catch (SQLException ex) {
         } finally {
             DB.getInstance().putConnection(con);
@@ -233,14 +218,12 @@ public class Controller implements Serializable {
 
     private void initCompanyTeams() {
         Connection con = null;
-        Statement stmt = null;
-        ResultSet rs = null;
 
         try {
             con = DB.getInstance().getConnection();
-            stmt = con.createStatement();
+            Statement stmt = con.createStatement();
             String querry = "SELECT * FROM companyteam;";
-            rs = stmt.executeQuery(querry);
+            ResultSet rs = stmt.executeQuery(querry);
             while (rs.next()) {
                 int id = rs.getInt("id");
                 int idCompany = rs.getInt("idCompany");
@@ -251,6 +234,7 @@ public class Controller implements Serializable {
                 companyTeams.add(companyTeam);
             }
             companyTeam = new CompanyTeam();
+            con.close();
         } catch (SQLException ex) {
         } finally {
             DB.getInstance().putConnection(con);
@@ -259,14 +243,12 @@ public class Controller implements Serializable {
 
     private void initUserCompanies() {
         Connection con = null;
-        Statement stmt = null;
-        ResultSet rs = null;
 
         try {
             con = DB.getInstance().getConnection();
-            stmt = con.createStatement();
+            Statement stmt = con.createStatement();
             String querry = "SELECT * FROM usercompany;";
-            rs = stmt.executeQuery(querry);
+            ResultSet rs = stmt.executeQuery(querry);
             while (rs.next()) {
                 int id = rs.getInt("id");
                 int idUser = rs.getInt("idUser");
@@ -277,6 +259,7 @@ public class Controller implements Serializable {
                 userCompanies.add(userCompany);
             }
             userCompany = new UserCompany();
+            con.close();
         } catch (SQLException ex) {
         } finally {
             DB.getInstance().putConnection(con);
@@ -285,14 +268,12 @@ public class Controller implements Serializable {
 
     private void initUserPositions() {
         Connection con = null;
-        Statement stmt = null;
-        ResultSet rs = null;
 
         try {
             con = DB.getInstance().getConnection();
-            stmt = con.createStatement();
+            Statement stmt = con.createStatement();
             String querry = "SELECT * FROM userposition;";
-            rs = stmt.executeQuery(querry);
+            ResultSet rs = stmt.executeQuery(querry);
             while (rs.next()) {
                 int id = rs.getInt("id");
                 int idUser = rs.getInt("idUser");
@@ -303,6 +284,7 @@ public class Controller implements Serializable {
                 userPositions.add(userPosition);
             }
             userPosition = new UserPosition();
+            con.close();
         } catch (SQLException ex) {
         } finally {
             DB.getInstance().putConnection(con);
@@ -311,14 +293,12 @@ public class Controller implements Serializable {
 
     private void initUserSalaries() {
         Connection con = null;
-        Statement stmt = null;
-        ResultSet rs = null;
 
         try {
             con = DB.getInstance().getConnection();
-            stmt = con.createStatement();
+            Statement stmt = con.createStatement();
             String querry = "SELECT * FROM usersalary;";
-            rs = stmt.executeQuery(querry);
+            ResultSet rs = stmt.executeQuery(querry);
             while (rs.next()) {
                 int id = rs.getInt("id");
                 int idUser = rs.getInt("idUser");
@@ -329,6 +309,7 @@ public class Controller implements Serializable {
                 userSalaries.add(userSalary);
             }
             userSalary = new UserSalary();
+            con.close();
         } catch (SQLException ex) {
         } finally {
             DB.getInstance().putConnection(con);
@@ -337,14 +318,12 @@ public class Controller implements Serializable {
 
     private void initUserTeams() {
         Connection con = null;
-        Statement stmt = null;
-        ResultSet rs = null;
 
         try {
             con = DB.getInstance().getConnection();
-            stmt = con.createStatement();
+            Statement stmt = con.createStatement();
             String querry = "SELECT * FROM userteams;";
-            rs = stmt.executeQuery(querry);
+            ResultSet rs = stmt.executeQuery(querry);
             while (rs.next()) {
                 int id = rs.getInt("id");
                 int idUser = rs.getInt("idUser");
@@ -355,6 +334,7 @@ public class Controller implements Serializable {
                 userTeams.add(userTeam);
             }
             userTeam = new UserTeam();
+            con.close();
         } catch (SQLException ex) {
         } finally {
             DB.getInstance().putConnection(con);
@@ -363,14 +343,12 @@ public class Controller implements Serializable {
 
     private void initOpenPositions() {
         Connection con = null;
-        Statement stmt = null;
-        ResultSet rs = null;
 
         try {
             con = DB.getInstance().getConnection();
-            stmt = con.createStatement();
+            Statement stmt = con.createStatement();
             String querry = "SELECT * FROM openposition;";
-            rs = stmt.executeQuery(querry);
+            ResultSet rs = stmt.executeQuery(querry);
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String name = rs.getString("name");
@@ -381,6 +359,7 @@ public class Controller implements Serializable {
                 openPositions.add(openPosition);
             }
             openPosition = new OpenPosition();
+            con.close();
         } catch (SQLException ex) {
         } finally {
             DB.getInstance().putConnection(con);
@@ -389,14 +368,12 @@ public class Controller implements Serializable {
 
     private void initCompanyOpenPositions() {
         Connection con = null;
-        Statement stmt = null;
-        ResultSet rs = null;
 
         try {
             con = DB.getInstance().getConnection();
-            stmt = con.createStatement();
+            Statement stmt = con.createStatement();
             String querry = "SELECT * FROM companyopenposition;";
-            rs = stmt.executeQuery(querry);
+            ResultSet rs = stmt.executeQuery(querry);
             while (rs.next()) {
                 int id = rs.getInt("id");
                 int idCompany = rs.getInt("idCompany");
@@ -407,13 +384,76 @@ public class Controller implements Serializable {
                 companyOpenPositions.add(companyOpenPosition);
             }
             companyOpenPosition = new CompanyOpenPosition();
+            con.close();
         } catch (SQLException ex) {
         } finally {
             DB.getInstance().putConnection(con);
         }
     }
 
+//******************************************************************************
+    public String registerUser() {
+        return "";
 
+    }
+
+    public String registerCompany() {
+        companies.add(company);
+        return "";
+    }
+
+    public String logIn() {
+        for (User u : users) {
+            if (u.getPassword().equals(password) && u.getUsername().equals(username)) {
+                user = u;
+                if (u.getType().equals("admin")) {
+                    return "homeAdmin";
+                } else {
+                    return "homeUser";
+                }
+            }
+        }
+        msg = "Uneli ste pogresno korisnicko ime/lozinku";
+        return null;
+    }
+
+    public String logOut() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
+        session.invalidate();
+        return "index";
+    }
+
+    public String changePassword() {
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).getUsername().equals(username) && users.get(i).getPassword().equals(password)) {
+                users.get(i).setPassword(newPassword);
+                msg = "You have successfully changed your password.";
+                return "index";
+            }
+        }
+        msg = "ERROR: User doesn't exist";
+        return null;
+    }
+
+    public void editUser(User u) {
+
+    }
+
+    public void editUser() {
+
+    }
+
+    public void deleteUser(User u) {
+
+    }
+
+    public String visitCompany(Company c) {
+        company = c;
+        return "homeCompany";
+    }
+
+//******************************************************************************
     public String getUsername() {
         return username;
     }
@@ -436,14 +476,6 @@ public class Controller implements Serializable {
 
     public void setMsg(String msg) {
         this.msg = msg;
-    }
-
-    public User getNewUser() {
-        return newUser;
-    }
-
-    public void setNewUser(User newUser) {
-        this.newUser = newUser;
     }
 
     public User getUser() {
@@ -470,14 +502,6 @@ public class Controller implements Serializable {
         this.city = city;
     }
 
-    public City getNewCity() {
-        return newCity;
-    }
-
-    public void setNewCity(City newCity) {
-        this.newCity = newCity;
-    }
-
     public ArrayList<City> getCities() {
         return cities;
     }
@@ -492,14 +516,6 @@ public class Controller implements Serializable {
 
     public void setCompany(Company company) {
         this.company = company;
-    }
-
-    public Company getNewCompany() {
-        return newCompany;
-    }
-
-    public void setNewCompany(Company newCompany) {
-        this.newCompany = newCompany;
     }
 
     public ArrayList<Company> getCompanies() {
@@ -518,14 +534,6 @@ public class Controller implements Serializable {
         this.position = position;
     }
 
-    public Position getNewPosition() {
-        return newPosition;
-    }
-
-    public void setNewPosition(Position newPosition) {
-        this.newPosition = newPosition;
-    }
-
     public ArrayList<Position> getPositions() {
         return positions;
     }
@@ -540,14 +548,6 @@ public class Controller implements Serializable {
 
     public void setTeam(Team team) {
         this.team = team;
-    }
-
-    public Team getNewTeam() {
-        return newTeam;
-    }
-
-    public void setNewTeam(Team newTeam) {
-        this.newTeam = newTeam;
     }
 
     public ArrayList<Team> getTeams() {
@@ -566,14 +566,6 @@ public class Controller implements Serializable {
         this.companyCity = companyCity;
     }
 
-    public CompanyCity getNewCompanyCity() {
-        return newCompanyCity;
-    }
-
-    public void setNewCompanyCity(CompanyCity newCompanyCity) {
-        this.newCompanyCity = newCompanyCity;
-    }
-
     public ArrayList<CompanyCity> getCompanyCities() {
         return companyCities;
     }
@@ -588,14 +580,6 @@ public class Controller implements Serializable {
 
     public void setCompanyTeam(CompanyTeam companyTeam) {
         this.companyTeam = companyTeam;
-    }
-
-    public CompanyTeam getNewCompanyTeam() {
-        return newCompanyTeam;
-    }
-
-    public void setNewCompanyTeam(CompanyTeam newCompanyTeam) {
-        this.newCompanyTeam = newCompanyTeam;
     }
 
     public ArrayList<CompanyTeam> getCompanyTeams() {
@@ -614,14 +598,6 @@ public class Controller implements Serializable {
         this.userCompany = userCompany;
     }
 
-    public UserCompany getNewUserCompany() {
-        return newUserCompany;
-    }
-
-    public void setNewUserCompany(UserCompany newUserCompany) {
-        this.newUserCompany = newUserCompany;
-    }
-
     public ArrayList<UserCompany> getUserCompanies() {
         return userCompanies;
     }
@@ -636,14 +612,6 @@ public class Controller implements Serializable {
 
     public void setUserPosition(UserPosition userPosition) {
         this.userPosition = userPosition;
-    }
-
-    public UserPosition getNewUserPosition() {
-        return newUserPosition;
-    }
-
-    public void setNewUserPosition(UserPosition newUserPosition) {
-        this.newUserPosition = newUserPosition;
     }
 
     public ArrayList<UserPosition> getUserPositions() {
@@ -662,14 +630,6 @@ public class Controller implements Serializable {
         this.userSalary = userSalary;
     }
 
-    public UserSalary getNewUserSalary() {
-        return newUserSalary;
-    }
-
-    public void setNewUserSalary(UserSalary newUserSalary) {
-        this.newUserSalary = newUserSalary;
-    }
-
     public ArrayList<UserSalary> getUserSalaries() {
         return userSalaries;
     }
@@ -684,14 +644,6 @@ public class Controller implements Serializable {
 
     public void setUserTeam(UserTeam userTeam) {
         this.userTeam = userTeam;
-    }
-
-    public UserTeam getNewUserTeam() {
-        return newUserTeam;
-    }
-
-    public void setNewUserTeam(UserTeam newUserTeam) {
-        this.newUserTeam = newUserTeam;
     }
 
     public ArrayList<UserTeam> getUserTeams() {
@@ -710,14 +662,6 @@ public class Controller implements Serializable {
         this.openPosition = openPosition;
     }
 
-    public OpenPosition getNewOpenPosition() {
-        return newOpenPosition;
-    }
-
-    public void setNewOpenPosition(OpenPosition newOpenPosition) {
-        this.newOpenPosition = newOpenPosition;
-    }
-
     public ArrayList<OpenPosition> getOpenPositions() {
         return openPositions;
     }
@@ -734,14 +678,6 @@ public class Controller implements Serializable {
         this.companyOpenPosition = companyOpenPosition;
     }
 
-    public CompanyOpenPosition getNewCompanyOpenPosition() {
-        return newCompanyOpenPosition;
-    }
-
-    public void setNewCompanyOpenPosition(CompanyOpenPosition newCompanyOpenPosition) {
-        this.newCompanyOpenPosition = newCompanyOpenPosition;
-    }
-
     public ArrayList<CompanyOpenPosition> getCompanyOpenPositions() {
         return companyOpenPositions;
     }
@@ -750,5 +686,12 @@ public class Controller implements Serializable {
         this.companyOpenPositions = companyOpenPositions;
     }
 
-    
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
+
 }

@@ -13,21 +13,21 @@
         <h:form>
             <h:panelGrid columns="2">
                 Username:
-                <h:inputText value="#{controller.newUser.username}"/>
+                <h:inputText value="#{controller.user.username}"/>
                 Password:
-                <h:inputSecret value="#{controller.newUser.password}"/>
+                <h:inputSecret value="#{controller.user.password}"/>
                 Name:
-                <h:inputText value="#{controller.newUser.name}"/>
+                <h:inputText value="#{controller.user.name}"/>
                 Surname:
-                <h:inputText value="#{controller.newUser.surname}"/>
+                <h:inputText value="#{controller.user.surname}"/>
                 Address:
-                <h:inputText value="#{controller.newUser.address}"/>
+                <h:inputText value="#{controller.user.address}"/>
                 Date of birth:
-                <h:inputText value="#{controller.newUser.dateOfBirth}">
+                <h:inputText value="#{controller.user.dateOfBirth}">
                     <f:convertDateTime pattern="yyyy-MM-dd"/>         
                 </h:inputText>  
                 E-mail:
-                <h:inputText value="#{controller.newUser.email}"/>
+                <h:inputText value="#{controller.user.email}"/>
                 <h:commandButton value="REGISTER" action="#{controller.registerUser()}"/>
             </h:panelGrid>
             
