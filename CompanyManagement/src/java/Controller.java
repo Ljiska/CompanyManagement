@@ -49,19 +49,21 @@ public class Controller implements Serializable {
 //******************************************************************************
     public Controller() {
         msg = "";
-        initUsers();
-        initCities();
-        initCompanies();
-        initPositions();
-        initTeams();
         initCompanyCities();
         initCompanyTeams();
         initUserCompanies();
         initUserPositions();
-        initUserSalaries();
+        
+        initUsers();
+        initCities();
         initUserTeams();
-        initOpenPositions();
         initCompanyOpenPositions();
+        initCompanies();
+        initPositions();
+        initOpenPositions();
+        initTeams();
+        initUserSalaries();
+        System.out.println("");
     }
 
     private void initUsers() {
@@ -88,6 +90,8 @@ public class Controller implements Serializable {
                 users.add(user);
             }
             user = new User();
+            rs.close();
+            stmt.close();
             con.close();
         } catch (SQLException ex) {
         } finally {
@@ -112,6 +116,8 @@ public class Controller implements Serializable {
                 cities.add(city);
             }
             city = new City();
+            rs.close();
+            stmt.close();
             con.close();
         } catch (SQLException ex) {
         } finally {
@@ -136,6 +142,8 @@ public class Controller implements Serializable {
                 companies.add(company);
             }
             company = new Company();
+            rs.close();
+            stmt.close();
             con.close();
         } catch (SQLException ex) {
         } finally {
@@ -160,6 +168,8 @@ public class Controller implements Serializable {
                 positions.add(position);
             }
             position = new Position();
+            rs.close();
+            stmt.close();
             con.close();
         } catch (SQLException ex) {
         } finally {
@@ -184,6 +194,8 @@ public class Controller implements Serializable {
                 teams.add(team);
             }
             team = new Team();
+            rs.close();
+            stmt.close();
             con.close();
         } catch (SQLException ex) {
         } finally {
@@ -209,6 +221,8 @@ public class Controller implements Serializable {
                 companyCities.add(companyCity);
             }
             companyCity = new CompanyCity();
+            rs.close();
+            stmt.close();
             con.close();
         } catch (SQLException ex) {
         } finally {
@@ -234,6 +248,8 @@ public class Controller implements Serializable {
                 companyTeams.add(companyTeam);
             }
             companyTeam = new CompanyTeam();
+            rs.close();
+            stmt.close();
             con.close();
         } catch (SQLException ex) {
         } finally {
@@ -259,6 +275,8 @@ public class Controller implements Serializable {
                 userCompanies.add(userCompany);
             }
             userCompany = new UserCompany();
+            rs.close();
+            stmt.close();
             con.close();
         } catch (SQLException ex) {
         } finally {
@@ -284,6 +302,8 @@ public class Controller implements Serializable {
                 userPositions.add(userPosition);
             }
             userPosition = new UserPosition();
+            rs.close();
+            stmt.close();
             con.close();
         } catch (SQLException ex) {
         } finally {
@@ -301,14 +321,16 @@ public class Controller implements Serializable {
             ResultSet rs = stmt.executeQuery(querry);
             while (rs.next()) {
                 int id = rs.getInt("id");
+                int amount = rs.getInt("amount");
                 int idUser = rs.getInt("idUser");
-                int idSalary = rs.getInt("idSalary");
 
-                userSalary = new UserSalary(id, idUser, idSalary);
+                userSalary = new UserSalary(id, amount, idUser);
 
                 userSalaries.add(userSalary);
             }
             userSalary = new UserSalary();
+            rs.close();
+            stmt.close();
             con.close();
         } catch (SQLException ex) {
         } finally {
@@ -322,7 +344,7 @@ public class Controller implements Serializable {
         try {
             con = DB.getInstance().getConnection();
             Statement stmt = con.createStatement();
-            String querry = "SELECT * FROM userteams;";
+            String querry = "SELECT * FROM userteam;";
             ResultSet rs = stmt.executeQuery(querry);
             while (rs.next()) {
                 int id = rs.getInt("id");
@@ -334,6 +356,8 @@ public class Controller implements Serializable {
                 userTeams.add(userTeam);
             }
             userTeam = new UserTeam();
+            rs.close();
+            stmt.close();
             con.close();
         } catch (SQLException ex) {
         } finally {
@@ -359,6 +383,8 @@ public class Controller implements Serializable {
                 openPositions.add(openPosition);
             }
             openPosition = new OpenPosition();
+            rs.close();
+            stmt.close();
             con.close();
         } catch (SQLException ex) {
         } finally {
@@ -377,13 +403,15 @@ public class Controller implements Serializable {
             while (rs.next()) {
                 int id = rs.getInt("id");
                 int idCompany = rs.getInt("idCompany");
-                int idOpenPosition = rs.getInt("idOpenPosition");
+                int idOpenPosition = rs.getInt("idOpenPositions");
 
                 companyOpenPosition = new CompanyOpenPosition(id, idCompany, idOpenPosition);
 
                 companyOpenPositions.add(companyOpenPosition);
             }
             companyOpenPosition = new CompanyOpenPosition();
+            rs.close();
+            stmt.close();
             con.close();
         } catch (SQLException ex) {
         } finally {
@@ -392,14 +420,16 @@ public class Controller implements Serializable {
     }
 
 //******************************************************************************
+    
     public String registerUser() {
-        return "";
-
+        users.add(user);
+        msg = "Uspesno ste se registrovali.";
+        return "index?faces-redirect=true";
     }
 
     public String registerCompany() {
         companies.add(company);
-        return "";
+        return "index?faces-redirect=true";
     }
 
     public String logIn() {
@@ -407,9 +437,9 @@ public class Controller implements Serializable {
             if (u.getPassword().equals(password) && u.getUsername().equals(username)) {
                 user = u;
                 if (u.getType().equals("admin")) {
-                    return "homeAdmin";
+                    return "homeAdmin?faces-redirect=true";
                 } else {
-                    return "homeUser";
+                    return "homeUser?faces-redirect=true";
                 }
             }
         }
@@ -421,15 +451,15 @@ public class Controller implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
         session.invalidate();
-        return "index";
+        return "index?faces-redirect=true";
     }
 
     public String changePassword() {
-        for (int i = 0; i < users.size(); i++) {
-            if (users.get(i).getUsername().equals(username) && users.get(i).getPassword().equals(password)) {
-                users.get(i).setPassword(newPassword);
+        for (User u : users) {
+            if (u.getUsername().equals(username) && u.getPassword().equals(password)) {
+                u.setPassword(newPassword);
                 msg = "You have successfully changed your password.";
-                return "index";
+                return "index?faces-redirect=true";
             }
         }
         msg = "ERROR: User doesn't exist";
@@ -437,11 +467,7 @@ public class Controller implements Serializable {
     }
 
     public void editUser(User u) {
-
-    }
-
-    public void editUser() {
-
+        u.setEdit(!u.isEdit());
     }
 
     public void deleteUser(User u) {
@@ -450,7 +476,7 @@ public class Controller implements Serializable {
 
     public String visitCompany(Company c) {
         company = c;
-        return "homeCompany";
+        return "homeCompany?faces-redirect=true";
     }
 
 //******************************************************************************

@@ -9,13 +9,15 @@
         <title>Company Management</title>
 
     </h:head>
-    <h:body>
+    <h:body style="background-image: url(images/homeAdmin.jpg);
+            background-repeat:   no-repeat;
+            width: 100%;
+            height: 100%; ">
         <p style ="font-size: 30px">Home Admin</p>
         <h:form>
             <h:dataTable value="#{controller.users}" var="u" border="1" cellpadding="4">
                 <h:column>
                     <f:facet name="header">Name</f:facet>
-                    <f:facet name="bre"></f:facet>
                     <h:outputText value="#{u.name}" rendered="#{not u.edit}"/>
                     <h:inputText value="#{u.name}" rendered="#{u.edit}"
                                  required="true" requiredMessage="Required field"/>
@@ -47,7 +49,7 @@
                 <h:column>
                     <f:facet name="header">Edit</f:facet>
                     <h:commandLink action="#{controller.editUser(u)}" rendered="#{not u.edit}">EDIT</h:commandLink>
-                    <h:commandButton action="#{controller.editUser()}" rendered="#{u.edit}" value="SAVE"/>
+                    <h:commandButton action="#{controller.editUser(u)}" rendered="#{u.edit}" value="SAVE"/>
                 </h:column>
                 <h:column>
                     <f:facet name="header">Delete</f:facet>
@@ -58,7 +60,7 @@
         <br/>
         <h:form>
             <h:commandButton value="Izloguj se" action="#{controller.logOut()}"/>
-        </h:form>Ф
+        </h:form>
     </h:body>
 </html>
 

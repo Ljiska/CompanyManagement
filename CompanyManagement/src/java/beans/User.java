@@ -1,6 +1,6 @@
 package beans;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class User {
 
@@ -83,7 +83,9 @@ public class User {
     }
 
     public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+        if(dateOfBirth != null)
+            this.dateOfBirth = new java.sql.Date(dateOfBirth.getTime());
+        this.dateOfBirth = null;
     }
 
     public String getEmail() {

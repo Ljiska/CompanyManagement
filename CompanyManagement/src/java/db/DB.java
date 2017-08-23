@@ -7,7 +7,7 @@ import java.util.logging.*;
 public class DB {
 
     private static DB instance;
-    private static final int MAX_CON = 5;
+    private static final int MAX_CON = 20;
     private static final Connection connections[] = new Connection[MAX_CON];
     private int free = MAX_CON, last = 0, first = 0;
 
