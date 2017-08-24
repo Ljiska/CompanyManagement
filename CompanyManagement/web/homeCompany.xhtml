@@ -13,29 +13,36 @@
             height: 100%; ">
         <p style="font-size: 30px">Home Company</p>
         <h:form>
-            <h:dataTable value="#{controller.company}" var="c" border="1" cellpadding="4">
-            <p:column>
-                <f:facet name="header">Name</f:facet>
-                <p:outputLabel value="#{c.name}"/>
-            </p:column>
-            </h:dataTable>
-        </h:form>
-        <br/>
-        <h:form>
-            <p:dataTable value="#{controller.openPositions}" var="o">
-            <p:column>
-                <f:facet name="header">Name</f:facet>
-                <p:outputLabel value="#{o.name}"/>
-            </p:column>
-            <p:column>
-                <f:facet name="header">Description</f:facet>
-                <p:outputLabel value="#{o.description}"/>
-            </p:column>
+            <p:dataTable value="#{controller.company}" var="c">
+                <p:column>
+                    <f:facet name="header">Name</f:facet>
+                    <p:outputLabel value="#{c.name}"/>
+                </p:column>
+                <p:column>
+                    <f:facet name="header">Description</f:facet>
+                    <p:outputLabel value="#{c.description}"/>
+                </p:column>
             </p:dataTable>
         </h:form>
         <br/>
         <h:form>
-                <p:commandButton action="index?faces-redirect=true" value="Back" />
+            <p:dataTable value="#{controller.openPositions}" var="o">
+                <p:column>
+                    <f:facet name="header">Name</f:facet>
+                    <p:outputLabel value="#{o.name}"/>
+                </p:column>
+                <p:column>
+                    <f:facet name="header">Description</f:facet>
+                    <p:outputLabel value="#{o.description}"/>
+                </p:column>
+                <p:column>
+                    <p:commandButton action="aplly?faces-redirect=true" value="Apply"/>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+        <br/>
+        <h:form>
+            <p:commandButton action="index?faces-redirect=true" value="Back" />
         </h:form>
     </h:body>
 </html>

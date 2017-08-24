@@ -435,7 +435,7 @@ public class Controller implements Serializable {
     public String logIn() {
         for (User u : users) {
             if (u.getPassword().equals(password) && u.getUsername().equals(username)) {
-                user = u;
+                user = u; //zasto se pamti u user-u???
                 if (u.getType().equals("admin")) {
                     return "homeAdmin?faces-redirect=true";
                 } else {
@@ -457,7 +457,7 @@ public class Controller implements Serializable {
     public String changePassword() {
         for (User u : users) {
             if (u.getUsername().equals(username) && u.getPassword().equals(password)) {
-                u.setPassword(newPassword);
+                            u.setPassword(newPassword);
                 msg = "You have successfully changed your password.";
                 return "index?faces-redirect=true";
             }
@@ -466,17 +466,13 @@ public class Controller implements Serializable {
         return null;
     }
 
-    public void editUser(User u) {
-        u.setEdit(!u.isEdit());
-    }
-
-    public void deleteUser(User u) {
-
-    }
-
     public String visitCompany(Company c) {
         company = c;
         return "homeCompany?faces-redirect=true";
+    }
+    
+    public String apply(){
+        return "index?faces-redirect=true";
     }
 
 //******************************************************************************
